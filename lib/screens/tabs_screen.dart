@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/main_drawer.dart';
 import './favorites_screen.dart';
 import './categories_screen.dart';
 
@@ -24,39 +25,14 @@ class _TabsScreenState extends State<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return //DefaultTabController(
-        //length: 2,
-        //child:
-        Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: Text(
           _pages[_selectedPageIndex]['title'],
         ),
-        /* bottom: TabBar(
-          tabs: [
-            Tab(
-              icon: Icon(
-                Icons.category,
-              ),
-              text: 'Categories',
-            ),
-            Tab(
-              icon: Icon(
-                Icons.star_border,
-              ),
-              text: 'Favourites',
-            ),
-          ],
-        ),*/
       ),
+      drawer: MainDrawer(),
       body: _pages[_selectedPageIndex]['page'],
-      /*TabBarView(children: [
-        CategoriesScreen(),
-        FavoritesScreen(),
-      ]),*/
-
-      //),
-
       bottomNavigationBar: BottomNavigationBar(
         unselectedItemColor: Colors.white,
         selectedItemColor: Theme.of(context).accentColor,
