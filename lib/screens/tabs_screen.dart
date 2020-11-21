@@ -10,37 +10,79 @@ class TabsScreen extends StatefulWidget {
 }
 
 class _TabsScreenState extends State<TabsScreen> {
+  final List<Map<String, dynamic>> _pages = [
+    {
+      'page': CategoriesScreen(),
+      'title': 'Categories',
+    },
+    {
+      'page': FavoritesScreen(),
+      'title': 'Your Favorites',
+    },
+  ];
+  int _selectedPageIndex = 0;
+
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Meals',
-          ),
-          bottom: TabBar(
-            tabs: [
-              Tab(
-                icon: Icon(
-                  Icons.category,
-                ),
-                text: 'Categories',
-              ),
-              Tab(
-                icon: Icon(
-                  Icons.star_border,
-                ),
-                text: 'Favourites',
-              ),
-            ],
-          ),
+    return //DefaultTabController(
+        //length: 2,
+        //child:
+        Scaffold(
+      appBar: AppBar(
+        title: Text(
+          _pages[_selectedPageIndex]['title'],
         ),
-        body: TabBarView(children: [
-          CategoriesScreen(),
-          FavoritesScreen(),
-        ]),
+        /* bottom: TabBar(
+          tabs: [
+            Tab(
+              icon: Icon(
+                Icons.category,
+              ),
+              text: 'Categories',
+            ),
+            Tab(
+              icon: Icon(
+                Icons.star_border,
+              ),
+              text: 'Favourites',
+            ),
+          ],
+        ),*/
+      ),
+      body: _pages[_selectedPageIndex]['page'],
+      /*TabBarView(children: [
+        CategoriesScreen(),
+        FavoritesScreen(),
+      ]),*/
+
+      //),
+
+      bottomNavigationBar: BottomNavigationBar(
+        unselectedItemColor: Colors.white,
+        selectedItemColor: Theme.of(context).accentColor,
+        onTap: _selectPage,
+        backgroundColor: Theme.of(context).primaryColor,
+        currentIndex: _selectedPageIndex,
+        type: BottomNavigationBarType.shifting,
+        items: [
+          BottomNavigationBarItem(
+            backgroundColor: Theme.of(context).primaryColor,
+            icon: Icon(Icons.category),
+            label: 'Categories',
+          ),
+          BottomNavigationBarItem(
+            backgroundColor: Theme.of(context).primaryColor,
+            icon: Icon(Icons.star),
+            label: 'Favorites',
+          ),
+        ],
       ),
     );
+  }
+
+  void _selectPage(int index) {
+    setState(() {
+      _selectedPageIndex = index;
+    });
   }
 }
