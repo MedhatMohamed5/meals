@@ -1,32 +1,74 @@
 import 'package:flutter/material.dart';
 import '../widgets/meal_item.dart';
 import '../dummy_data.dart';
+import '../models/meal.dart';
 
-class CategoryMealsScreen extends StatelessWidget {
+class CategoryMealsScreen extends StatefulWidget {
   static const routeName = '/category-meals';
 
-  /*final String categoryId;
-  final String categoryTitle;
+  @override
+  _CategoryMealsScreenState createState() => _CategoryMealsScreenState();
+}
 
-  const CategoryMealsScreen({
-    Key key,
-    @required this.categoryId,
-    @required this.categoryTitle,
-  }) : super(key: key);*/
+class _CategoryMealsScreenState extends State<CategoryMealsScreen> {
+  List<Meal> meals;
+  String title;
+  bool _loadedInitData = false;
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    // this will generate an error because of ModalRoute.of(context) isn't initialized yet
+    // so we will use in didChangeDependencies
+
+    /*
     final routeArgs =
         ModalRoute.of(context).settings.arguments as Map<String, String>;
 
-    final title = routeArgs['title'];
     final id = routeArgs['id'];
 
-    final meals = DUMMY_MEALS
+    title = routeArgs['title'];
+
+    meals = DUMMY_MEALS
         .where(
           (element) => element.categories.contains(id),
         )
-        .toList();
+        .toList();*/
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // Here it will works fine because it will be called after being fully initialized
+    // and still run before build method
+    // but when we call setState this function will be called again and will overwrite the list again and the meal won't be deleted
+    // so we will use the boolean variable
+
+    if (!_loadedInitData) {
+      final routeArgs =
+          ModalRoute.of(context).settings.arguments as Map<String, String>;
+
+      final id = routeArgs['id'];
+
+      title = routeArgs['title'];
+
+      meals = DUMMY_MEALS
+          .where(
+            (element) => element.categories.contains(id),
+          )
+          .toList();
+      _loadedInitData = true;
+    }
+
+    super.didChangeDependencies();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    /*final meals = DUMMY_MEALS
+        .where(
+          (element) => element.categories.contains(id),
+        )
+        .toList();*/
 
     return Scaffold(
       appBar: AppBar(
@@ -43,10 +85,17 @@ class CategoryMealsScreen extends StatelessWidget {
             complexity: meals[index].complexity,
             affordability: meals[index].affordability,
             duration: meals[index].duration,
+            deleteItem: _deleteMeal,
           );
         },
         itemCount: meals.length,
       ),
     );
+  }
+
+  void _deleteMeal(String mealId) {
+    setState(() {
+      meals.removeWhere((meal) => meal.id == mealId);
+    });
   }
 }

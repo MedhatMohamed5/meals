@@ -9,6 +9,7 @@ class MealItem extends StatelessWidget {
   final int duration;
   final Complexity complexity;
   final Affordability affordability;
+  final Function deleteItem;
 
   const MealItem({
     Key key,
@@ -18,6 +19,7 @@ class MealItem extends StatelessWidget {
     @required this.complexity,
     @required this.affordability,
     @required this.duration,
+    @required this.deleteItem,
   }) : super(key: key);
 
   String get complexityText {
@@ -53,10 +55,20 @@ class MealItem extends StatelessWidget {
   }
 
   void selectMeal(BuildContext ctx) {
-    Navigator.of(ctx).pushNamed(
+    // then part will be run when the screen you pushed finish its work (poped)
+    // if it poped by using pop method with passed data it will back in value variable
+
+    Navigator.of(ctx)
+        .pushNamed(
       MealDetailScreen.routeName,
       arguments: id,
-    );
+    )
+        .then((value) {
+      print(value);
+      if (value != null) {
+        deleteItem(value);
+      }
+    });
   }
 
   @override
